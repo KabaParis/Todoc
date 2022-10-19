@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.MainActivity">
+
+    <item
+        android:id="@+id/action_filter"
+        android:icon="@drawable/ic_filter_list"
+        android:title="@string/label_action_filter"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/filter_alphabetical"
+                android:title="@string/sort_alphabetical"
+                app:showAsAction="never|withText" />
+            <item
+                android:id="@+id/filter_alphabetical_inverted"
+                android:title="@string/sort_alphabetical_invert"
+                app:showAsAction="never|withText" />
+            <item
+                android:id="@+id/filter_oldest_first"
+                android:title="@string/sort_oldest_first"
+                app:showAsAction="never|withText" />
+            <item
+                android:id="@+id/filter_recent_first"
+                android:title="@string/sort_recent_first"
+                app:showAsAction="never|withText" />
+        </menu>
+    </item>
+
+</menu>

@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Todoc</string>
+
+    <string name="label_action_filter">Filter</string>
+
+    <string name="sort_alphabetical">A -&gt; Z</string>
+    <string name="sort_alphabetical_invert">Z -&gt; A</string>
+    <string name="sort_oldest_first">Les plus anciens d’abord</string>
+    <string name="sort_recent_first">Les plus récents d’abord</string>
+
+    <string name="add_task">Ajouter une tâche</string>
+    <string name="add">Ajouter</string>
+
+    <string name="no_task">Tu n’as aucune tâche à traiter</string>
+
+    <string name="task_name_hint">Nom de la tâche</string>
+
+    <string name="empty_task_name">Le nom de la tâche doit être renseigné</string>
+</resources>
