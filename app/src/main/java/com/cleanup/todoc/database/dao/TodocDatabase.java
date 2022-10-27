@@ -12,6 +12,7 @@ import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.security.auth.callback.Callback;
@@ -60,7 +61,6 @@ public abstract class TodocDatabase extends RoomDatabase {
     }
 
     private static Callback prepopulateDatabase() {
-
         return new Callback() {
 
             @Override
@@ -73,11 +73,10 @@ public abstract class TodocDatabase extends RoomDatabase {
                     db.execSQL("insert into Project(id, name, color) values (1, 'Projet Tartampion', '0xFFEADAD1')");
                     db.execSQL("insert into Project(id, name, color) values (2, 'Projet Lucidia', '0xFFB4CDBA')");
                     db.execSQL("insert into Project(id, name, color) values (3, 'Projet Circus', '0xFFA3CED2')");
+
                 });
 
-
             }
-
         };
 
     }

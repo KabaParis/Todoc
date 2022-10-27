@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /**
      * The adapter which handles the list of tasks
      */
-    private final TasksAdapter adapter = new TasksAdapter(tasks, this);
+    private TasksAdapter adapter;
 
     /**
      * The sort method to be used to display tasks
@@ -101,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     @NonNull
     private RecyclerView listTasks;
 
+
+
     /**
      * The TextView displaying the empty state
      */
@@ -122,28 +125,24 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         lblNoTasks = findViewById(R.id.lbl_no_task);
 
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        listTasks.setAdapter(adapter);
+
 
         // declare executor
-        ExecutorService executor = Executors.newFixedThreadPool(3);
-   //     ExecutorService executor = Executors.newSingleThreadExecutor();
+        Executors.newSingleThreadExecutor().execute(() -> {
+            allProjects = database.projectDao().getProjects().toArray(new Project[0]);
+            adapter = new TasksAdapter(tasks, allProjects, MainActivity.this);
+            listTasks.setAdapter(adapter);
+                });
 
-    /*       ExecutorService executorService =
-                new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
-                        new LinkedBlockingQueue<Runnable>());
-    */
-        allProjects = database.projectDao().getProjects().toArray(new Project[0]);
-   //   tasks = database.taskDao().getTasks();
-
-   /*     executorService.shutdown();
-        try {
-            if (!executorService.awaitTermination(800, TimeUnit.MILLISECONDS)) {
-                executorService.shutdownNow();
+        database.taskDao().getTasks().observe(this, new Observer<List<Task>>() {
+            @Override
+            public void onChanged(List<Task> tasks) {
+                MainActivity.this.tasks.clear();
+                MainActivity.this.tasks.addAll(tasks);
+                updateTasks();
             }
-        } catch (InterruptedException e) {
-            executorService.shutdownNow();
-        }
-*/
+        });
+
 
         findViewById(R.id.fab_add_task).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,12 +179,10 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
     @Override
     public void onDeleteTask(Task task) {
-    //    tasks.remove(task);
-    //    updateTasks();
-        database.taskDao().deleteTask(task);
 
-
-
+        Executors.newSingleThreadExecutor().execute(() -> {
+                    database.taskDao().deleteTask(task);
+                });
     }
 
     /**
@@ -257,10 +254,9 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      * @param task the task to be added to the list
      */
     private void addTask(@NonNull Task task) {
-    //    tasks.add(task);
-    //    updateTasks();
-        database.taskDao().createTask(task);
-
+        Executors.newSingleThreadExecutor().execute(() -> {
+                    database.taskDao().createTask(task);
+                });
     }
 
     /**
