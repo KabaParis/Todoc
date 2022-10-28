@@ -130,18 +130,26 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         // declare executor
         Executors.newSingleThreadExecutor().execute(() -> {
             allProjects = database.projectDao().getProjects().toArray(new Project[0]);
-            adapter = new TasksAdapter(tasks, allProjects, MainActivity.this);
-            listTasks.setAdapter(adapter);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter = new TasksAdapter(tasks, allProjects, MainActivity.this);
+                    listTasks.setAdapter(adapter);
+
+                    database.taskDao().getTasks().observe(MainActivity.this, new Observer<List<Task>>() {
+                        @Override
+                        public void onChanged(List<Task> tasks) {
+                            MainActivity.this.tasks.clear();
+                            MainActivity.this.tasks.addAll(tasks);
+                            updateTasks();
+                        }
+                    });
+                }
+            });
+
                 });
 
-        database.taskDao().getTasks().observe(this, new Observer<List<Task>>() {
-            @Override
-            public void onChanged(List<Task> tasks) {
-                MainActivity.this.tasks.clear();
-                MainActivity.this.tasks.addAll(tasks);
-                updateTasks();
-            }
-        });
+
 
 
         findViewById(R.id.fab_add_task).setOnClickListener(new View.OnClickListener() {
